@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMQTTnet", "EasyMQTTnet\EasyMQTTnet.csproj", "{BFA5E57C-DAB7-424B-B8A0-E5CC61682321}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMQTTnetTests", "EasyMQTTnetTests\EasyMQTTnetTests.csproj", "{EC4221E6-B96E-41A2-A804-FFA7602B17AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB414E89-850B-4EFA-ADB5-208538E1CBAB}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFA5E57C-DAB7-424B-B8A0-E5CC61682321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA5E57C-DAB7-424B-B8A0-E5CC61682321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA5E57C-DAB7-424B-B8A0-E5CC61682321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA5E57C-DAB7-424B-B8A0-E5CC61682321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC4221E6-B96E-41A2-A804-FFA7602B17AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC4221E6-B96E-41A2-A804-FFA7602B17AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC4221E6-B96E-41A2-A804-FFA7602B17AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC4221E6-B96E-41A2-A804-FFA7602B17AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD4952EC-6707-43B9-B2DC-726D81DEAF7A}
+	EndGlobalSection
+EndGlobal
