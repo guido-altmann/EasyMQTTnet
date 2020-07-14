@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
+using MQTTnet.Client.Publishing;
 using Newtonsoft.Json;
 
 namespace EasyMQTTnet
 {
+    /// <summary>
+    /// Provides the (MQTT) message bus.
+    /// </summary>
+    /// <seealso cref="EasyMQTTnet.IBus" />
+    /// <seealso cref="System.IDisposable" />
     public class MessageBus : IBus, IDisposable
     {
         private IMqttClient mqttClient;
         private readonly string server;
         private readonly int port;
-        private Dictionary<string, Action<object>> registeredMessageHandlers = new Dictionary<string, Action<object>>();
+        private readonly Dictionary<string, Action<object>> registeredMessageHandlers = new Dictionary<string, Action<object>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageBus"/> class.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="port">The port.</param>
         public MessageBus(string server = "localhost", int port = 1883)
         {
             this.server = server;
@@ -32,6 +44,8 @@ namespace EasyMQTTnet
                 .Build();
             mqttClient = factory.CreateMqttClient();
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+
             mqttClient.UseApplicationMessageReceivedHandler(e =>
             {
 #if DEBUG
@@ -43,7 +57,10 @@ namespace EasyMQTTnet
                 Console.WriteLine();
 #endif
                 string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                var obj = JsonConvert.DeserializeObject(payload);
+                var typeInfo = e.ApplicationMessage.Topic.Split('/');
+                var assembly = Assembly.LoadFrom(typeInfo[0]);
+                var type = assembly.GetType($"{typeInfo[1]}+{typeInfo[2]}");
+                var obj = JsonConvert.DeserializeObject(payload, type);
 
                 if (registeredMessageHandlers.ContainsKey(e.ApplicationMessage.Topic))
                     registeredMessageHandlers[e.ApplicationMessage.Topic].Invoke(obj);
@@ -59,11 +76,11 @@ namespace EasyMQTTnet
             {
                 Console.WriteLine("### DISCONNECTED FROM SERVER ###");
 
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 
                 try
                 {
-                    await mqttClient.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
+                    await mqttClient.ConnectAsync(options, CancellationToken.None).ConfigureAwait(false); // Since 3.0.5 with CancellationToken
                 }
                 catch
                 {
@@ -73,43 +90,57 @@ namespace EasyMQTTnet
 
             try
             {
-                await mqttClient.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
+                await mqttClient.ConnectAsync(options, CancellationToken.None).ConfigureAwait(false); // Since 3.0.5 with CancellationToken
             }
             catch
             {
                 Console.WriteLine("### CONNECTING FAILED ###");
             }
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
         }
 
-        public void Publish<T>(T message)
+        /// <inheritdoc />
+        public bool Publish<T>(T message)
         {
-            if (!mqttClient.IsConnected) return;
+            if (!mqttClient.IsConnected) return false;
 
             var type = message.GetType();
-            var topic = $"{type.Assembly.ManifestModule.Name}/{type.Namespace}/{type.Name}";
+            var topic = GetRoutingKey(type);
             var payload = JsonConvert.SerializeObject(message);
 
-             mqttClient.PublishAsync(topic, payload).GetAwaiter().GetResult();
+            var result = mqttClient.PublishAsync(topic, payload).GetAwaiter().GetResult();
+
+            return result.ReasonCode == MqttClientPublishReasonCode.Success;
         }
 
-        public void SubScribe<T>(Action<T> onMessage)
+        /// <inheritdoc />
+        public void Subscribe<T>(Action<T> onMessage)
         {
             if (!mqttClient.IsConnected) return;
 
             var type = typeof(T);
+            var topic = GetRoutingKey(type);
+            var result = mqttClient.SubscribeAsync(new MqttTopicFilter() { Topic = topic }).GetAwaiter().GetResult();
 
-            var topic = $"{type.Assembly.ManifestModule.Name}/{type.Namespace}/{type.Name}";
-            mqttClient.SubscribeAsync(new MqttTopicFilter() { Topic = topic }).GetAwaiter().GetResult();
-
-            registeredMessageHandlers.Add(topic, o => onMessage((T)o));
+            if (result.Items.Count > 0)
+                registeredMessageHandlers.Add(topic, o => onMessage((T)o));
         }
 
+        private string GetRoutingKey(Type type)
+        {
+            return $"{type.Assembly.ManifestModule.Name}/{type.DeclaringType?.FullName}/{type.Name}";
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
                 mqttClient?.Dispose();

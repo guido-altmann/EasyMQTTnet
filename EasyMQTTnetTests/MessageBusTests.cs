@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EasyMQTTnet;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EasyMQTTnet.Tests
@@ -26,18 +23,24 @@ namespace EasyMQTTnet.Tests
         public void PublishTest()
         {
             var target = EasyMqttFactory.CreateBus("localhost");
-            var message = new MyMessage() {Text = "Hallo Message!"};
+            var message = new MyMessage() {Text = "Hello Message!"};
             target.Publish(message);
         }
 
         [TestMethod()]
-        public void SubScribeTest()
+        public void SubscribeTest()
         {
+            var messageReceived = false;
             var target = EasyMqttFactory.CreateBus("localhost");
-            target.SubScribe<MyMessage>(msg => Console.WriteLine("Received Message: " + msg.Text));
-            var message = new MyMessage() { Text = "Hallo Message!" };
+            target.Subscribe<MyMessage>(msg =>
+            {
+                messageReceived = true;
+                Console.WriteLine("Received Message: " + msg.Text);
+            });
+            var message = new MyMessage() { Text = "Hello Message!" };
             target.Publish(message);
-            Task.Delay(2000).GetAwaiter().GetResult();
+            Task.Delay(200).GetAwaiter().GetResult();
+            Assert.IsTrue(messageReceived);
         }
     }
 }
