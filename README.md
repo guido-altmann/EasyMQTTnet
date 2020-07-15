@@ -1,8 +1,10 @@
-#### A .NET API for Message Queuing with MQTT
+
+# EasyMQTTnet
+## A .NET API for Message Queuing with MQTT
 
 (Experimental State)
 
-##### Goals:
+**Goals:**
 
 1. To make working with Message Queuing on .NET as easy as possible.
 
