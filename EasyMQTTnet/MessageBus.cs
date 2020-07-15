@@ -100,6 +100,9 @@ namespace EasyMQTTnet
         }
 
         /// <inheritdoc />
+        public bool IsConnected => mqttClient.IsConnected;
+
+        /// <inheritdoc />
         public bool Publish<T>(T message)
         {
             if (!mqttClient.IsConnected) return false;

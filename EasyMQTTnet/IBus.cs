@@ -8,6 +8,11 @@ namespace EasyMQTTnet
     public interface IBus
     {
         /// <summary>
+        /// Shows the connection state of the bus (MQTT client).
+        /// </summary>
+        bool IsConnected { get; }
+
+        /// <summary>
         /// Publishes the specified message.
         /// </summary>
         /// <typeparam name="T"></typeparam>

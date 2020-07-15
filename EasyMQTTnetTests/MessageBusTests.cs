@@ -12,35 +12,61 @@ namespace EasyMQTTnet.Tests
             public string Text { get; set; }
         }
 
+        class MyNextMessage
+        {
+            public string Text { get; set; }
+        }
+
+        private const string CONNECTIONSTRING = "server=test.mosquitto.org, port=1883";
+
         [TestMethod()]
         public void MessageBusTest()
         {
-            var target = EasyMqttFactory.CreateBus("server=localhost");
+            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
             Assert.IsNotNull(target);
+            Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
         }
 
         [TestMethod()]
         public void PublishTest()
         {
-            var target = EasyMqttFactory.CreateBus("localhost");
+            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
+            Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
+
             var message = new MyMessage() {Text = "Hello Message!"};
-            target.Publish(message);
+            var actual = target.Publish(message);
+            Assert.IsTrue(actual, "Publishing message fails.");
         }
 
         [TestMethod()]
         public void SubscribeTest()
         {
-            var messageReceived = false;
-            var target = EasyMqttFactory.CreateBus("localhost");
+            var firstMessageReceived = false;
+            var secondMessageReceived = false;
+
+            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
+            Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
+
             target.Subscribe<MyMessage>(msg =>
             {
-                messageReceived = true;
+                firstMessageReceived = true;
                 Console.WriteLine("Received Message: " + msg.Text);
             });
-            var message = new MyMessage() { Text = "Hello Message!" };
+            target.Subscribe<MyNextMessage>(msg =>
+            {
+                secondMessageReceived = true;
+                Console.WriteLine("Received Message: " + msg.Text);
+            });
+
+            var message = new MyMessage() { Text = "Hello first Message!" };
+            var message2 = new MyNextMessage() { Text = "Hello second Message!" };
             target.Publish(message);
-            Task.Delay(200).GetAwaiter().GetResult();
-            Assert.IsTrue(messageReceived);
+            target.Publish(message2);
+
+            Task.Delay(500).GetAwaiter().GetResult();
+
+            Assert.IsTrue(firstMessageReceived, "First message not reveived.");
+            Assert.IsTrue(secondMessageReceived, "Second message not reveived.");
         }
     }
 }

@@ -19,7 +19,7 @@ To subscribe to a message...
     bus.Subscribe<MyMessage>(msg => Console.WriteLine(msg.Text));
 
 
-The goal of EasyMQTTnet is to provide a library that makes working with MQTT in .NET as simple as possible. In order to do this, it has to take an opinionated view of how you should use EasyMQTTnet with .NET. It trades flexibility for simplicity by enforcing some simple conventions. These include:
+The goal of EasyMQTTnet is to provide a library that makes working with Message Queuing in .NET as simple as possible. In order to do this, it has to take an opinionated view of how you should use EasyMQTTnet with .NET. It trades flexibility for simplicity by enforcing some simple conventions. These include:
 
 * Messages should be represented by .NET types. 
 * Messages should be routed by their .NET type.
