@@ -2,6 +2,8 @@
 # EasyMQTTnet
 ## A .NET API for Message Queuing with MQTT
 
+![Build](https://github.com/guido-altmann/EasyMQTTnet/workflows/Build/badge.svg)
+
 (Experimental State)
 
 **Goals:**
