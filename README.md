@@ -2,7 +2,8 @@
 # EasyMQTTnet
 ## A .NET API for Message Queuing with MQTT
 
-![Build](https://github.com/guido-altmann/EasyMQTTnet/workflows/Build/badge.svg)
+![Build](https://github.com/guido-altmann/EasyMQTTnet/workflows/Build/badge.svg) [![NuGet Status](https://img.shields.io/nuget/v/EasyMQTTnet)](https://www.nuget.org/packages/EasyMQTTnet/)
+
 
 (Experimental State)
 
