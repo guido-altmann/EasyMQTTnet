@@ -136,6 +136,10 @@ namespace EasyMQTTnet
 
         private string GetRoutingKey(Type type)
         {
+#if DEBUG
+            Console.WriteLine($"Declaring type full name: {type.DeclaringType?.FullName}");
+            Console.WriteLine($"Type full name: {type.FullName}");
+#endif
             return $"{type.Assembly.ManifestModule.Name}/{type.DeclaringType?.FullName}/{type.Name}";
         }
 
