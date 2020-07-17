@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -58,7 +59,9 @@ namespace EasyMQTTnet
 #endif
                 string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
                 var typeInfo = e.ApplicationMessage.Topic.Split('/');
-                var assembly = Assembly.LoadFrom(typeInfo[0]);
+                var fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
+                var filePath = fi.DirectoryName ?? "";
+                var assembly = Assembly.LoadFrom(Path.Combine(filePath, typeInfo[0]));
                 var type = assembly.GetType($"{typeInfo[1]}+{typeInfo[2]}");
                 var obj = JsonConvert.DeserializeObject(payload, type);
 
