@@ -63,8 +63,8 @@ namespace EasyMQTTnet
                 var fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
                 var filePath = fi.DirectoryName ?? "";
                 var assembly = Assembly.LoadFrom(Path.Combine(filePath, typeInfo[0]));
-                var type = assembly.GetType($"{typeInfo[1]}+{typeInfo[2]}");
-                Debug.WriteLine($"Deserialize type: {type}");
+                var type = assembly.GetType($"{typeInfo[1].Replace('_', '+')}");
+                Debug.WriteLine($"Deserialize type (full name): {type}");
                 var obj = JsonConvert.DeserializeObject(payload, type);
 
                 if (registeredMessageHandlers.ContainsKey(e.ApplicationMessage.Topic))
@@ -136,11 +136,9 @@ namespace EasyMQTTnet
 
         private string GetRoutingKey(Type type)
         {
-#if DEBUG
-            Console.WriteLine($"Declaring type full name: {type.DeclaringType?.FullName}");
-            Console.WriteLine($"Type full name: {type.FullName}");
-#endif
-            return $"{type.Assembly.ManifestModule.Name}/{type.DeclaringType?.FullName}/{type.Name}";
+            // make nested type name compatible with MQTT-Topic 
+            var fullName = type.FullName?.Replace('+', '_');
+            return $"{type.Assembly.ManifestModule.Name}/{fullName}";
         }
 
         /// <summary>
