@@ -5,8 +5,6 @@
 ![Build](https://github.com/guido-altmann/EasyMQTTnet/workflows/Build/badge.svg) [![NuGet Status](https://img.shields.io/nuget/v/EasyMQTTnet)](https://www.nuget.org/packages/EasyMQTTnet/)
 
 
-(Experimental State)
-
 **Goals:**
 
 1. To make working with Message Queuing on .NET as easy as possible.
