@@ -63,7 +63,7 @@ namespace EasyMQTTnet.Tests
             target.Publish(message);
             target.Publish(message2);
 
-            Task.Delay(500).GetAwaiter().GetResult();
+            Task.Delay(800).GetAwaiter().GetResult();
 
             Assert.IsTrue(firstMessageReceived, "First message not reveived.");
             Assert.IsTrue(secondMessageReceived, "Second message not reveived.");
