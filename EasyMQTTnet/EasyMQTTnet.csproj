@@ -7,6 +7,7 @@
     <Description>A .NET API for Message Queuing with MQTT
 Make working with Message Queuing on .NET as easy as possible.</Description>
     <PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
