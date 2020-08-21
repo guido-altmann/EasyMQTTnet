@@ -77,6 +77,8 @@ namespace EasyMQTTnet
                 Console.WriteLine("### CONNECTED WITH SERVER ###");
             });
 
+#pragma warning disable CA1031 // Do not catch general exception types
+
             mqttClient.UseDisconnectedHandler(async e =>
             {
                 Console.WriteLine("### DISCONNECTED FROM SERVER ###");
@@ -101,6 +103,8 @@ namespace EasyMQTTnet
             {
                 Console.WriteLine("### CONNECTING FAILED ###");
             }
+
+#pragma warning restore CA1031 // Do not catch general exception types
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
         }
 
@@ -134,7 +138,7 @@ namespace EasyMQTTnet
                 registeredMessageHandlers.Add(topic, o => onMessage((T)o));
         }
 
-        private string GetRoutingKey(Type type)
+        private static string GetRoutingKey(Type type)
         {
             // make nested type name compatible with MQTT-Topic 
             var fullName = type.FullName?.Replace('+', '_');
