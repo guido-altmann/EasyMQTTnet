@@ -44,10 +44,9 @@ namespace EasyMQTTnet
             var options = new MqttClientOptionsBuilder()
                 .WithTcpServer(server, port) // Port is optional
                 .Build();
+            
             mqttClient = factory.CreateMqttClient();
-
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-
+            
             mqttClient.UseApplicationMessageReceivedHandler(e =>
             {
 #if DEBUG
@@ -76,9 +75,7 @@ namespace EasyMQTTnet
             {
                 Console.WriteLine("### CONNECTED WITH SERVER ###");
             });
-
-#pragma warning disable CA1031 // Do not catch general exception types
-
+            
             mqttClient.UseDisconnectedHandler(async e =>
             {
                 Console.WriteLine("### DISCONNECTED FROM SERVER ###");
@@ -103,9 +100,6 @@ namespace EasyMQTTnet
             {
                 Console.WriteLine("### CONNECTING FAILED ###");
             }
-
-#pragma warning restore CA1031 // Do not catch general exception types
-#pragma warning restore CA1303 // Do not pass literals as localized parameters
         }
 
         /// <inheritdoc />
