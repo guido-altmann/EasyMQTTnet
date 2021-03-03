@@ -16,7 +16,7 @@ Make working with Message Queuing on .NET as easy as possible.</Description>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MQTTnet" Version="3.0.14" />
+    <PackageReference Include="MQTTnet" Version="3.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
