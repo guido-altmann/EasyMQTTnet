@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Guido Altmann</Authors>
-    <Copyright>(c) 2020 Guido Altmann</Copyright>
+    <Copyright>(c) 2021 Guido Altmann</Copyright>
     <Description>A .NET API for Message Queuing with MQTT
 Make working with Message Queuing on .NET as easy as possible.</Description>
     <PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
