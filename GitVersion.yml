@@ -1,5 +1,5 @@
+mode: Mainline
 tag-prefix: '[vV]'
-mode: ContinuousDeployment
 branches: {}
 ignore:
   sha: []
