@@ -1,23 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Guido Altmann</Authors>
-    <Copyright>(c) 2022 Guido Altmann</Copyright>
-    <Description>A .NET API for Message Queuing with MQTT
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Authors>Guido Altmann</Authors>
+		<Copyright>(c) 2022 Guido Altmann</Copyright>
+		<Description>A .NET API for Message Queuing with MQTT
 Make working with Message Queuing on .NET as easy as possible.</Description>
-    <PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.9.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MQTTnet" Version="3.1.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
+		<PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MQTTnet" Version="3.1.2"/>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+	</ItemGroup>
 </Project>
