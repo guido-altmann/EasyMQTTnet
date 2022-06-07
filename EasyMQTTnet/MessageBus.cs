@@ -8,8 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Client.Options;
-using MQTTnet.Client.Publishing;
+using MQTTnet.Packets;
 using Newtonsoft.Json;
 
 namespace EasyMQTTnet
@@ -46,8 +45,8 @@ namespace EasyMQTTnet
                 .Build();
             
             mqttClient = factory.CreateMqttClient();
-            
-            mqttClient.UseApplicationMessageReceivedHandler(e =>
+
+            mqttClient.ApplicationMessageReceivedAsync += e =>
             {
 #if DEBUG
                 Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
@@ -69,28 +68,32 @@ namespace EasyMQTTnet
                 if (registeredMessageHandlers.ContainsKey(e.ApplicationMessage.Topic))
                     registeredMessageHandlers[e.ApplicationMessage.Topic].Invoke(obj);
 
-            });
+                return Task.CompletedTask;
+            };
 
-            mqttClient.UseConnectedHandler(e =>
+            mqttClient.ConnectedAsync += e =>
             {
                 Console.WriteLine("### CONNECTED WITH SERVER ###");
-            });
-            
-            mqttClient.UseDisconnectedHandler(async e =>
+                return Task.CompletedTask;
+            };
+
+            mqttClient.DisconnectedAsync += e =>
             {
                 Console.WriteLine("### DISCONNECTED FROM SERVER ###");
 
-                await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 
                 try
                 {
-                    await mqttClient.ConnectAsync(options, CancellationToken.None).ConfigureAwait(false); // Since 3.0.5 with CancellationToken
+                    mqttClient.ConnectAsync(options, CancellationToken.None).ConfigureAwait(false); // Since 3.0.5 with CancellationToken
                 }
                 catch
                 {
                     Console.WriteLine("### RECONNECTING FAILED ###");
                 }
-            });
+
+                return Task.CompletedTask;
+            };
 
             try
             {
@@ -101,6 +104,7 @@ namespace EasyMQTTnet
                 Console.WriteLine("### CONNECTING FAILED ###");
             }
         }
+
 
         /// <inheritdoc />
         public bool IsConnected => mqttClient.IsConnected;
@@ -113,8 +117,12 @@ namespace EasyMQTTnet
             var type = message.GetType();
             var topic = GetRoutingKey(type);
             var payload = JsonConvert.SerializeObject(message);
+            var applicationMessage = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload)
+                .Build();
 
-            var result = mqttClient.PublishAsync(topic, payload).GetAwaiter().GetResult();
+            var result = mqttClient.PublishAsync(applicationMessage).GetAwaiter().GetResult();
 
             return result.ReasonCode == MqttClientPublishReasonCode.Success;
         }
