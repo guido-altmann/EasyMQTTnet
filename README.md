@@ -36,4 +36,4 @@ This means that messages are defined by .NET classes. Each distinct message type
 
 EasyMQTTnet routes messages by their type. When you publish a message, EasyMQTTnet examines its type and gives it a routing key based on the type name, namespace and assembly. On the consuming side, subscribers subscribe to a type. After subscribing to a type, messages of that type get routed to the subscriber.
 
-By default, EasyMQTTnet serializes .NET types as JSON using the Newtonsoft.Json library. This has the advantage that messages are human readable, so you can use tools such as the EasyMQTTnet management application to debug message problems.
+By default, EasyMQTTnet serializes .NET types as JSON using the Newtonsoft.Json library. This has the advantage that messages are human readable, so you can use tools  to debug message problems.
