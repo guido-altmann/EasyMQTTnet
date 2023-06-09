@@ -51,12 +51,12 @@ namespace EasyMQTTnet
 #if DEBUG
                 Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
                 Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
-                Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
+                Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment.Array)}");
                 Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
                 Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
                 Console.WriteLine();
 #endif
-                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment.Array);
                 var typeInfo = e.ApplicationMessage.Topic.Split('/');
                 var fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
                 var filePath = fi.DirectoryName ?? "";
