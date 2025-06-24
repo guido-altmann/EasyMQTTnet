@@ -5,7 +5,7 @@ namespace EasyMQTTnet
     /// <summary>
     /// Provides a simple Publish/Subscribe API for a message bus.
     /// </summary>
-    public interface IBus
+    public interface IBus : IDisposable
     {
         /// <summary>
         /// Shows the connection state of the bus (MQTT client).
