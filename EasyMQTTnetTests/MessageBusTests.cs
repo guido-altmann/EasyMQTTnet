@@ -24,7 +24,7 @@ namespace EasyMQTTnet.Tests
         [TestMethod()]
         public void MessageBusTest()
         {
-            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
+            using var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
             Assert.IsNotNull(target);
             Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
         }
@@ -32,7 +32,7 @@ namespace EasyMQTTnet.Tests
         [TestMethod()]
         public void PublishTest()
         {
-            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
+            using var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
             Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
 
             var message = new MyMessage() {Text = "Hello Message!"};
@@ -45,7 +45,7 @@ namespace EasyMQTTnet.Tests
         {
             var receivedEvents = new List<string>();
 
-            var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
+            using var target = EasyMqttFactory.CreateBus(CONNECTIONSTRING);
             Assert.IsTrue(target.IsConnected, "Connection to MQTT broker fails.");
 
             var statsUpdatedEvent = new ManualResetEvent(false);

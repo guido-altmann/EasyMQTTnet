@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
-using MQTTnet.Client;
+using MQTTnet.Formatter;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
 
@@ -18,7 +18,7 @@ namespace EasyMQTTnet
     /// </summary>
     /// <seealso cref="EasyMQTTnet.IBus" />
     /// <seealso cref="System.IDisposable" />
-    public class MessageBus : IBus, IDisposable
+    public class MessageBus : IBus
     {
         private IMqttClient mqttClient;
         private readonly string server;
@@ -39,8 +39,11 @@ namespace EasyMQTTnet
 
         private async Task InitMqtt()
         {
-            var factory = new MqttFactory();
+            var factory = new MqttClientFactory();
             var options = new MqttClientOptionsBuilder()
+                .WithClientId(Guid.NewGuid().ToString())
+                .WithCleanSession()
+                .WithProtocolVersion(MqttProtocolVersion.V311)
                 .WithTcpServer(server, port) // Port is optional
                 .Build();
             
@@ -51,12 +54,12 @@ namespace EasyMQTTnet
 #if DEBUG
                 Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
                 Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
-                Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment.Array)}");
+                Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
                 Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
                 Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
                 Console.WriteLine();
 #endif
-                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment.Array);
+                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
                 var typeInfo = e.ApplicationMessage.Topic.Split('/');
                 var fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
                 var filePath = fi.DirectoryName ?? "";
@@ -80,7 +83,6 @@ namespace EasyMQTTnet
             mqttClient.DisconnectedAsync += e =>
             {
                 Console.WriteLine("### DISCONNECTED FROM SERVER ###");
-
                 Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 
                 try
@@ -99,9 +101,11 @@ namespace EasyMQTTnet
             {
                 await mqttClient.ConnectAsync(options, CancellationToken.None).ConfigureAwait(false); // Since 3.0.5 with CancellationToken
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("### CONNECTING FAILED ###");
+                Console.WriteLine($"### CONNECTING FAILED ### {Environment.NewLine}" +
+                                  $"{ex.Message}{Environment.NewLine}" +
+                                  $"{ex.StackTrace}");
             }
         }
 
@@ -158,8 +162,21 @@ namespace EasyMQTTnet
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-                mqttClient?.Dispose();
+            if (disposing && mqttClient != null)
+            {
+                // Dispose managed resources
+                mqttClient.ApplicationMessageReceivedAsync -= async e => { };
+                mqttClient.ConnectedAsync -= async e => { };
+                mqttClient.DisconnectedAsync -= async e => { };
+                
+                if (mqttClient.IsConnected)
+                    mqttClient.DisconnectAsync(new MqttClientDisconnectOptionsBuilder()
+                            .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
+                            .Build())
+                        .GetAwaiter().GetResult();
+                
+                mqttClient.Dispose();
+            }
         }
        
     }

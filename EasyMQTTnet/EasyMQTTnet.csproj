@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Authors>Guido Altmann</Authors>
 		<Copyright>(c) 2022 Guido Altmann</Copyright>
 		<Description>A .NET API for Message Queuing with MQTT
@@ -8,13 +8,14 @@ Make working with Message Queuing on .NET as easy as possible.</Description>
 		<PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<LangVersion>default</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="MQTTnet" Version="4.2.1.781" />
+		<PackageReference Include="MQTTnet" Version="5.0.1.1416" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 </Project>
