@@ -11,7 +11,7 @@ Make working with Message Queuing on .NET as easy as possible.</Description>
 		<LangVersion>default</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+		<PackageReference Include="GitVersion.MsBuild" Version="6.4.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
