@@ -2,15 +2,17 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Authors>Guido Altmann</Authors>
-		<Copyright>(c) 2022 Guido Altmann</Copyright>
+		<Copyright>(c) 2025 Guido Altmann</Copyright>
 		<Description>A .NET API for Message Queuing with MQTT
 Make working with Message Queuing on .NET as easy as possible.</Description>
 		<PackageProjectUrl>https://github.com/guido-altmann/EasyMQTTnet</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<LangVersion>default</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<None Include="../README.md" Pack="true" PackagePath="/" />
 		<PackageReference Include="GitVersion.MsBuild" Version="6.4.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
